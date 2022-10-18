@@ -14,17 +14,24 @@
                     <h5 class="mt-3 hlabel">Plek plaats:</h5>
                     <v-select :options="filterdPlaatsen" v-model="selectedPlaats" :change="getSelectedPlekID()">
                     </v-select>
+                    <div class="container text-center">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="mt-3 hlabel">check in datum:</h5>
+                                <Datepicker v-model="checkin" type="date" range :minDate="checkin" maxRange="4"
+                                    @update:modelValue="handleDate(checkin)" />
+                            </div>
+                            <div class="col">
+                                <h5 class="mt-3 hlabel">aantal dagen:</h5>
+                                <vue-number-input v-model="dagen" size="small" :min="1" :max="4" inline controls
+                                    class="">
+                                </vue-number-input>
+                            </div>
 
-                    <h5 class="mt-3 hlabel">check in datum:</h5>
-                    <Datepicker class="mt-3" v-model="checkin"></Datepicker>
-
+                        </div>
+                    </div>
 
                     <h5 class="mt-3 hlabel">aantal personen</h5>
-
-
-
-                    <!--  -->
-
                     <Popper>
                         <button type="button" class="btn btn-success"> <i class="fa-solid fa-person"> :
                                 {{aantaalPersonen
@@ -128,7 +135,7 @@
                             <h4 class="col-tiltle">Bestelling informatie </h4>
                             <p class="bestelling-info">Achternaam : {{selectedKlant}}</p>
                             <p class="bestelling-info">Plaats : {{selectedPlaats}}</p>
-                            <p class="bestelling-info">Check in datum : {{checkin}}</p>
+                            <p class="bestelling-info">Check in datum : {{startDate}}</p>
                             <p class="bestelling-info">Volwassenen : {{volwassenen}}</p>
                             <p class="bestelling-info">Kinderen van 4 tot 12 jaar : {{kinderen12}}</p>
                             <p class="bestelling-info">Kinderen tot 4 jaar : {{kinderen4}}</p>
@@ -161,8 +168,10 @@ import Datepicker from '@vuepic/vue-datepicker';
 
 
 
+
 export default {
     components: { Datepicker },
+
     data: function () {
         return {
             klantenList: [],
@@ -174,8 +183,15 @@ export default {
             volwassenen: 0,
             kinderen12: 0,
             kinderen4: 0,
+            startDate: "",
+            endDate: "",
             aantaalPersonen: null,
-            checkin: null,
+            checkin: new Date(),
+            dagen: 1,
+
+            
+            
+
 
             hond: false,
             bezoker: false,
@@ -211,6 +227,7 @@ export default {
 
     },
     updated() {
+
         this.totaalPrijs = 5
 
         if (this.hond) {
@@ -226,6 +243,13 @@ export default {
         async getSelectedPlekID() {
             const plekkenData = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=getPlekkenID", { "naam": this.selectedPlaats });
             this.plaatsen = plekkenData.data.plaatsen;
+        },
+        handleDate(array) {
+            this.startDate = new Date(array[0]).toISOString().substring(0, 10);
+            this.endDate = new Date(array[1]).toISOString().substring(0, 10);
+
+
+
         }
 
     },
@@ -274,7 +298,7 @@ export default {
 }
 
 .footer {
-    height: 16vh;
+    height: 17vh;
     margin-top: 2%;
     background-color: #264653;
 }
