@@ -38,7 +38,7 @@
                                 = volwassenen + kinderen12 + kinderen4}} </i></button>
                         <template #content>
                             <div class="popper-text">volwassenen:</div>
-                            <vue-number-input v-model="volwassenen" size="small" :min="1" :max="10" inline controls
+                            <vue-number-input v-model="volwassenen" size="small" :min="1" :max="6" inline controls
                                 class="">
                             </vue-number-input>
                             <div class="popper-text">Kinderen van 4 tot 12:</div>
@@ -61,24 +61,26 @@
 
                                     <div class="col d-flex flex-column">
                                         <label for="hond" class="label-text">Hond :&nbsp;</label>
-                                        <input class="form-check-input" type="checkbox" id="checkbox" v-model="hond" />
+                                        <input class="form-check-input" type="checkbox" id="checkbox" v-model="hond"
+                                            @change="calc()" />
                                         <label for="bezoker" class="label-text">Bezoker :&nbsp;</label>
-                                        <input class="form-check-input" type="checkbox" id="checkbox"
-                                            v-model="bezoker" />
+                                        <input class="form-check-input" type="checkbox" id="checkbox" v-model="bezoker"
+                                            @change="calc()" />
                                         <label for="auto" class="label-text">Auto :&nbsp;</label>
-                                        <input class="form-check-input" type="checkbox" id="checkbox" v-model="auto" />
+                                        <input class="form-check-input" type="checkbox" id="checkbox" v-model="auto"
+                                            @change="calc()" />
                                         <label for="elektriciteit" class="label-text">elektriciteit :&nbsp;</label>
                                         <input class="form-check-input" type="checkbox" id="checkbox"
-                                            v-model="elektriciteit" />
+                                            v-model="elektriciteit" @change="calc()" />
                                         <label for="wasmachine" class="label-text">wasmachine :&nbsp;</label>
                                         <input class="form-check-input" type="checkbox" id="checkbox"
-                                            v-model="wasmachine" />
+                                            v-model="wasmachine" @change="calc()" />
                                         <label for="douche" class="label-text">douche :&nbsp;</label>
-                                        <input class="form-check-input" type="checkbox" id="checkbox"
-                                            v-model="douche" />
+                                        <input class="form-check-input" type="checkbox" id="checkbox" v-model="douche"
+                                            @change="calc()" />
                                         <label for="wasdroger" class="label-text">wasdroger :&nbsp;</label>
                                         <input class="form-check-input" type="checkbox" id="checkbox"
-                                            v-model="wasdroger" />
+                                            v-model="wasdroger" @change="calc()" />
 
                                     </div>
 
@@ -169,6 +171,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 
 
 
+
 export default {
     components: { Datepicker },
 
@@ -180,7 +183,7 @@ export default {
             filterdPlaatsen: [],
             selectedKlant: "",
             selectedPlaats: "",
-            volwassenen: 0,
+            volwassenen: 1,
             kinderen12: 0,
             kinderen4: 0,
             startDate: "",
@@ -189,8 +192,10 @@ export default {
             checkin: new Date(),
             dagen: 1,
 
-            
-            
+            selectedklantId: "",
+            selectedPlaatsId: "",
+            selectedPlaatsPrijs: "",
+
 
 
             hond: false,
@@ -201,7 +206,7 @@ export default {
             douche: false,
             wasdroger: false,
 
-            totaalPrijs: null,
+            totaalPrijs: 0,
 
 
 
@@ -226,23 +231,46 @@ export default {
         })
 
     },
-    updated() {
-
-        this.totaalPrijs = 5
-
-        if (this.hond) {
-            this.totaalPrijs = this.totaalPrijs + 2
-        }
-
-    },
     methods: {
         async getSelectedKlantID() {
             const returenddata = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=getKlantID", { "achternaam": this.selectedKlant });
-            this.klantenList = returenddata.data.klanten;
+            this.selectedklantId = parseInt(returenddata.data.klanten[0].id);
+
         },
         async getSelectedPlekID() {
+            this.selectedPlaatsPrijs = 0;
             const plekkenData = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=getPlekkenID", { "naam": this.selectedPlaats });
-            this.plaatsen = plekkenData.data.plaatsen;
+            this.selectedPlaatsId = parseInt(plekkenData.data.plekken[0].id);
+            this.selectedPlaatsPrijs = parseInt(plekkenData.data.plekken[0].prijs);
+            this.calc()
+
+        }
+        ,
+        calc() {
+
+            this.totaalPrijs = (this.selectedPlaatsPrijs + (this.volwassenen * 5) + (this.kinderen12 * 4)) * this.dagen
+
+            if (this.hond) {
+                this.totaalPrijs = this.totaalPrijs + 2
+            }
+            if (this.bezoker) {
+                this.totaalPrijs = this.totaalPrijs + 2
+            }
+            if (this.elektriciteit) {
+                this.totaalPrijs = this.totaalPrijs + 2
+            }
+            if (this.wasmachine) {
+                this.totaalPrijs = this.totaalPrijs + 6
+            }
+            if (this.wasdroger) {
+                this.totaalPrijs = this.totaalPrijs + 4
+            }
+            if (this.douche) {
+                this.totaalPrijs = this.totaalPrijs + 0.50
+            }
+            if (this.auto) {
+                this.totaalPrijs = this.totaalPrijs + 3
+            }
         },
         handleDate(array) {
             this.startDate = new Date(array[0]).toISOString().substring(0, 10);
