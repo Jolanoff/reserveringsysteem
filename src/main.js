@@ -7,6 +7,8 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import VueNumberInput from '@chenfengyuan/vue-number-input';
 import Popper from "vue3-popper";
+import VueLoading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 import VueAxios from 'vue-axios'
 import Inloggen from './components/InLoggen.vue'
 import HomePagina from './components/HomePagina.vue'
@@ -14,6 +16,7 @@ import medewerkersOZ from './components/system/medewerkersOZ.vue'
 import beschikbaarPlekken from './components/system/beschikbaarPlekken.vue'
 import klantenOverzicht from './components/system/klantenOverzicht.vue'
 import ReserveringAanmaken from './components/system/ReserveringAanmaken.vue'
+import reserveringOv from './components/system/reserveringOv.vue'
 const routes = [
     {
       path: "/",
@@ -45,6 +48,11 @@ const routes = [
       name: "ReserveringAanmaken",
       component: ReserveringAanmaken,
     },
+    {
+      path: "/reserveringOverzicht",
+      name: "reserveringOverzicht",
+      component: reserveringOv,
+    },
     
   ];
   
@@ -60,4 +68,5 @@ app
 .use(VueAxios, axios)
 .component(VueNumberInput.name, VueNumberInput)
 .component("Popper", Popper)
+.use(VueLoading)
 .mount('#app')
