@@ -33,6 +33,49 @@ if($action == 'getPlekkenID'){
     $result['plekken'] = $plekken;
 }
 
+if($action == 'create'){
+    $_POST = json_decode(file_get_contents("php://input"), true);
+    $klant = $_POST['klant_id'];
+    $plaats = $_POST['plaats_id'];
+    $checkIn = $_POST['checkin'];
+    $dagen = $_POST['dagen'];
+    $volwassenen = $_POST['volwassenen'];
+    $kinderen12 = $_POST['kinderen12'];
+    $kinderen4 = $_POST['kinderen4'];
+    $hond = $_POST['hond'];
+    $elektriciteit = $_POST['elektriciteit'];
+    $bezoekers = $_POST['bezoekers'];
+    $douche = $_POST['douche'];
+    $wasmachine = $_POST['wasmachine'];
+    $wasdroger = $_POST['wasdroger'];
+    $auto = $_POST['auto'];
+    $kosten = $_POST['kosten'];
+    
+    $sql = $conn->query("INSERT INTO bestellingen ( klant_id, plaats_id, checkin, dagen, volwassenen, kinderen12, kinderen4, hond, elektriciteit, bezoekers, douche, wasmachine, wasdroger, auto, kosten) VALUES
+    ( '$klant', '$plaats', '$checkIn', '$dagen', '$volwassenen', '$kinderen12', '$kinderen4', '$hond', '$elektriciteit', '$bezoekers', '$douche', '$wasmachine', '$wasdroger', '$auto', '$kosten')");
+    if($sql){
+        $result['message'] = "Klant is toegevoegd";
+    }
+    else{
+        $result['error'] = true;
+        $result['message'] = "we kunnen helaas het klant niet toevoegen";
+
+    }
+}
+    if($action == 'plaatsBezitten'){
+        $_POST = json_decode(file_get_contents("php://input"), true);
+        $id = $_POST['id'];
+        $sql = $conn->query("UPDATE plaatsen SET bezit = 'true' WHERE id = '$id'");
+        if($sql){
+            $result['message'] = "plaats is gewijzigd";
+        }
+        else{
+            $result['error'] = true;
+            $result['message'] = "we kunnen helaas het plaats niet wijzigen";
+        }
+    }
+    
+  
 
 $conn -> close();
 echo json_encode($result);

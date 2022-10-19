@@ -22,7 +22,7 @@
                         </router-link>
                     </div>
                     <div class="col mt-2 d-flex justify-content-center cards">
-                        <router-link class="single-card" to="/medewerkers"><a href="">Reservering overzicht</a>
+                        <router-link class="single-card" to="/reserveringOverzicht"><a href="">Reservering overzicht</a>
                         </router-link>
                     </div>
                     <div class="col mt-2 d-flex justify-content-center cards">

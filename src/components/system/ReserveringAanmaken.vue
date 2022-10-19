@@ -1,5 +1,7 @@
 <template>
     <div>
+        <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="fullPage" :color="colorLoader" :background-color="backgroundColorLoader"  />
+
         <h1 class="mt-5 text-center title">Reservering aanmaken</h1>
         <div class="container text-center">
             <div class="row">
@@ -145,15 +147,19 @@
                         <div class="col">
                             <h4 class="col-tiltle">Extra's </h4>
                             <p v-if="hond" class="bestelling-info">Hond : 2 euro</p>
-                            <p v-if="elektriciteit" class="bestelling-info">Elektriciteit : </p>
-                            <p v-if="bezoker" class="bestelling-info">Bezoekers : </p>
-                            <p v-if="douche" class="bestelling-info">Douche : </p>
-                            <p v-if="wasmachine" class="bestelling-info">Wasmachine : </p>
-                            <p v-if="wasdroger" class="bestelling-info">Wasdroger : </p>
-                            <p v-if="auto" class="bestelling-info">Auto : </p>
+                            <p v-if="elektriciteit" class="bestelling-info">Elektriciteit : 2 euro</p>
+                            <p v-if="bezoker" class="bestelling-info">Bezoekers : 2 euro</p>
+                            <p v-if="douche" class="bestelling-info">Douche : 0.50 euro</p>
+                            <p v-if="wasmachine" class="bestelling-info">Wasmachine : 6 euro</p>
+                            <p v-if="wasdroger" class="bestelling-info">Wasdroger : 4 euro</p>
+                            <p v-if="auto" class="bestelling-info">Auto : 3 euro</p>
                         </div>
-                        <div class="col">
-                            Column
+                        <div class="col d-flex flex-column">
+                            <button type="button" class="btn btn-danger off-btn"
+                                v-on:click="refresh()">aanuleren/opnieuw</button>
+                            <button type="button" class="btn btn-success off-btn"
+                                v-on:click="checkIn()">Check-In</button>
+                            <p id="vulling"></p>
                         </div>
                     </div>
                 </div>
@@ -167,13 +173,13 @@
 
 import axios from 'axios';
 import Datepicker from '@vuepic/vue-datepicker';
-
-
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 
 
 export default {
-    components: { Datepicker },
+    components: { Datepicker, Loading },
 
     data: function () {
         return {
@@ -208,10 +214,17 @@ export default {
 
             totaalPrijs: 0,
 
+            bestelling: [],
+            plaats: [],
+            
 
-
+            isLoading: false,
+            fullPage: true,
+            colorLoader: "#009e4c",
+            backgroundColorLoader: "#000000",
         };
     },
+   
     async created() {
         if (!sessionStorage.getItem('role')) {
             location.href = '/'
@@ -236,12 +249,14 @@ export default {
             const returenddata = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=getKlantID", { "achternaam": this.selectedKlant });
             this.selectedklantId = parseInt(returenddata.data.klanten[0].id);
 
+
         },
         async getSelectedPlekID() {
             this.selectedPlaatsPrijs = 0;
             const plekkenData = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=getPlekkenID", { "naam": this.selectedPlaats });
             this.selectedPlaatsId = parseInt(plekkenData.data.plekken[0].id);
             this.selectedPlaatsPrijs = parseInt(plekkenData.data.plekken[0].prijs);
+
             this.calc()
 
         }
@@ -275,10 +290,37 @@ export default {
         handleDate(array) {
             this.startDate = new Date(array[0]).toISOString().substring(0, 10);
             this.endDate = new Date(array[1]).toISOString().substring(0, 10);
+        },
+        refresh() {
+            location.reload()
+        },
+        checkIn() {
+            if (this.selectedKlant && this.selectedPlaats && this.startDate) {
+                const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=create", { "klant_id": this.selectedklantId, "plaats_id": this.selectedPlaatsId, "checkin": this.startDate, "dagen": this.dagen, "volwassenen": this.volwassenen, "kinderen12": this.kinderen12, "kinderen4": this.kinderen4, "hond": this.hond, "elektriciteit": this.elektriciteit, "bezoekers": this.bezoker, "douche": this.douche, "wasmachine": this.wasmachine, "wasdroger": this.wasdroger, "auto": this.auto, "kosten": this.totaalPrijs, });
+                this.bestelling = returenddata.data;
+                this.plekBezitten()
+            }
+            else {
+                document.getElementById('vulling').innerHTML = "U moet alle informatie invullen";
+            }
+
+        },
+
+        plekBezitten() {
+            const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=plaatsBezitten", { "id": this.selectedPlaatsId });
+            this.plaatsen = returenddata.data;
+            this.doAjax()
+
+        },
+        doAjax() {
+            this.isLoading = true;
+            window.setTimeout(function () {
+                window.location.reload();
+                this.isLoading = false
+            }, 3000);
 
 
-
-        }
+        },
 
     },
 
@@ -334,5 +376,13 @@ export default {
 .footer-text {
     margin-top: 13%;
     font-weight: 600;
+}
+
+.off-btn {
+    margin: 3%;
+}
+
+#vulling {
+    color: red;
 }
 </style>
