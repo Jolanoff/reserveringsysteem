@@ -15,7 +15,8 @@ if(isset($_GET['action'])){
 if($action == 'read'){
     $sql = $conn->query("SELECT bestellingen.* , klanten.voornaam, plaatsen.naam FROM bestellingen 
     INNER JOIN klanten ON  bestellingen.klant_id = klanten.id 
-    INNER JOIN plaatsen ON bestellingen.plaats_id = plaatsen.id;");
+    INNER JOIN plaatsen ON bestellingen.plaats_id = plaatsen.id 
+    WHERE status = 'checked in';");
     $reserveringen = array();
     while($row = $sql->fetch_assoc()){
         array_push($reserveringen, $row);
@@ -35,6 +36,42 @@ if($action == 'delete'){
     }
 }
 
+if($action == 'update'){
+    $_POST = json_decode(file_get_contents("php://input"), true);
+    $id = $_POST['id'];
+    $sql = $conn->query("UPDATE bestellingen SET status = 'checked out' WHERE bestelling_id = '$id'");
+    if($sql){
+        $result['message'] = "plaats is gewijzigd";
+    }
+    else{
+        $result['error'] = true;
+        $result['message'] = "we kunnen helaas het plaats niet wijzigen";
+    }
+}
+if($action == 'checkOutPlaats'){
+    $_POST = json_decode(file_get_contents("php://input"), true);
+    $id = $_POST['id'];
+    $sql = $conn->query("UPDATE plaatsen SET bezit = 'false' WHERE id = '$id'");
+    if($sql){
+        $result['message'] = "plaats is gewijzigd";
+    }
+    else{
+        $result['error'] = true;
+        $result['message'] = "we kunnen helaas het plaats niet wijzigen";
+    }
+}
+
+if($action == 'readBestellingen'){
+    $sql = $conn->query("SELECT bestellingen.* , klanten.voornaam, plaatsen.naam FROM bestellingen 
+    INNER JOIN klanten ON  bestellingen.klant_id = klanten.id 
+    INNER JOIN plaatsen ON bestellingen.plaats_id = plaatsen.id 
+    WHERE status = 'checked out';");
+    $reserveringen = array();
+    while($row = $sql->fetch_assoc()){
+        array_push($reserveringen, $row);
+    }
+    $result['reserveringen'] = $reserveringen;
+}
 
 $conn -> close();
 echo json_encode($result);

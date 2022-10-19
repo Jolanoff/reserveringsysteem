@@ -25,7 +25,7 @@
             <router-link to="/medewerkers"><a v-if="role == 'admin'" class="nav-link" href="#">Medewerkers</a></router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" v-if="role == 'admin'">Inkomsten overzicht</a>
+            <router-link to="/inkomstenOverzicht"><a class="nav-link" href="#" v-if="role == 'admin'">Inkomsten overzicht</a></router-link>
           </li>
           
           <a class="nav-link" href="#" v-on:click="Uitloggen()">Uitloggen</a>

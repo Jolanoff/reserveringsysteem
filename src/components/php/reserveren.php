@@ -51,8 +51,8 @@ if($action == 'create'){
     $auto = $_POST['auto'];
     $kosten = $_POST['kosten'];
     
-    $sql = $conn->query("INSERT INTO bestellingen ( klant_id, plaats_id, checkin, dagen, volwassenen, kinderen12, kinderen4, hond, elektriciteit, bezoekers, douche, wasmachine, wasdroger, auto, kosten) VALUES
-    ( '$klant', '$plaats', '$checkIn', '$dagen', '$volwassenen', '$kinderen12', '$kinderen4', '$hond', '$elektriciteit', '$bezoekers', '$douche', '$wasmachine', '$wasdroger', '$auto', '$kosten')");
+    $sql = $conn->query("INSERT INTO bestellingen ( klant_id, plaats_id, checkin, dagen, volwassenen, kinderen12, kinderen4, hond, elektriciteit, bezoekers, douche, wasmachine, wasdroger, auto, kosten , status) VALUES
+    ( '$klant', '$plaats', '$checkIn', '$dagen', '$volwassenen', '$kinderen12', '$kinderen4', '$hond', '$elektriciteit', '$bezoekers', '$douche', '$wasmachine', '$wasdroger', '$auto', '$kosten' , 'checked in')");
     if($sql){
         $result['message'] = "Klant is toegevoegd";
     }
@@ -62,6 +62,7 @@ if($action == 'create'){
 
     }
 }
+
     if($action == 'plaatsBezitten'){
         $_POST = json_decode(file_get_contents("php://input"), true);
         $id = $_POST['id'];

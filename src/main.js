@@ -17,6 +17,7 @@ import beschikbaarPlekken from './components/system/beschikbaarPlekken.vue'
 import klantenOverzicht from './components/system/klantenOverzicht.vue'
 import ReserveringAanmaken from './components/system/ReserveringAanmaken.vue'
 import reserveringOv from './components/system/reserveringOv.vue'
+import inkomstenOv from './components/system/inkomstenOv.vue'
 const routes = [
     {
       path: "/",
@@ -52,6 +53,11 @@ const routes = [
       path: "/reserveringOverzicht",
       name: "reserveringOverzicht",
       component: reserveringOv,
+    },
+    {
+      path: "/inkomstenOverzicht",
+      name: "inkomstenOverzicht",
+      component: inkomstenOv,
     },
     
   ];
