@@ -19,60 +19,60 @@ import ReserveringAanmaken from './components/system/ReserveringAanmaken.vue'
 import reserveringOv from './components/system/reserveringOv.vue'
 import inkomstenOv from './components/system/inkomstenOv.vue'
 const routes = [
-    {
-      path: "/",
-      name: "LoginPagina",
-      component: Inloggen,
-    },
-    {
-      path: "/Home",
-      name: "HomePagina",
-      component: HomePagina,
-    },
-    {
-      path: "/medewerkers",
-      name: "medewerkers",
-      component: medewerkersOZ,
-    },
-    {
-      path: "/klanten",
-      name: "klantenOverzicht",
-      component: klantenOverzicht,
-    },
-    {
-      path: "/beschikbaarPlekken",
-      name: "beschikbaarPlekken",
-      component: beschikbaarPlekken,
-    },
-    {
-      path: "/ReserveringAanmaken",
-      name: "ReserveringAanmaken",
-      component: ReserveringAanmaken,
-    },
-    {
-      path: "/reserveringOverzicht",
-      name: "reserveringOverzicht",
-      component: reserveringOv,
-    },
-    {
-      path: "/inkomstenOverzicht",
-      name: "inkomstenOverzicht",
-      component: inkomstenOv,
-    },
-    
-  ];
-  
+  {
+    path: "/",
+    name: "LoginPagina",
+    component: Inloggen,
+  },
+  {
+    path: "/Home",
+    name: "HomePagina",
+    component: HomePagina,
+  },
+  {
+    path: "/medewerkers",
+    name: "medewerkers",
+    component: medewerkersOZ,
+  },
+  {
+    path: "/klanten",
+    name: "klantenOverzicht",
+    component: klantenOverzicht,
+  },
+  {
+    path: "/beschikbaarPlekken",
+    name: "beschikbaarPlekken",
+    component: beschikbaarPlekken,
+  },
+  {
+    path: "/ReserveringAanmaken",
+    name: "ReserveringAanmaken",
+    component: ReserveringAanmaken,
+  },
+  {
+    path: "/reserveringOverzicht",
+    name: "reserveringOverzicht",
+    component: reserveringOv,
+  },
+  {
+    path: "/inkomstenOverzicht",
+    name: "inkomstenOverzicht",
+    component: inkomstenOv,
+  },
+
+];
+
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
-  });
-  let app = createApp(App)
+  history: createWebHistory(),
+  routes,
+});
+let app = createApp(App)
 app
-.component('v-select', vSelect)
-.component('Datepicker', Datepicker)
-.use(router)
-.use(VueAxios, axios)
-.component(VueNumberInput.name, VueNumberInput)
-.component("Popper", Popper)
-.use(VueLoading)
-.mount('#app')
+  .component('v-select', vSelect)
+  .component('Datepicker', Datepicker)
+  .use(router)
+  .use(VueAxios, axios)
+  .component(VueNumberInput.name, VueNumberInput)
+  .component("Popper", Popper)
+  .use(VueLoading)
+  .mount('#app')

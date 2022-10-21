@@ -1,6 +1,7 @@
 <template>
     <div>
-        <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="fullPage" :color="colorLoader" :background-color="backgroundColorLoader"  />
+        <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="fullPage" :color="colorLoader"
+            :background-color="backgroundColorLoader" />
         <div class="container text-center">
             <div class="row">
                 <div class="col mt-5">
@@ -16,7 +17,6 @@
             <div class="line mt-3"></div>
             <div class="row">
                 <div class="col">
-
                 </div>
                 <div class="mt-2">
 
@@ -72,7 +72,9 @@
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#reserveringVerwijderen"
                                         v-on:click=saveId(reservering.bestelling_id)>
                                         <i class="fa-solid fa-trash text-warning"></i></a></td>
-                                        <td><a href="#" v-on:click="checkOutId(reservering.bestelling_id, reservering.plaats_id)"><i class="fa-sharp fa-solid fa-credit-card text-warning"></i></a></td>
+                                <td><a href="#"
+                                        v-on:click="checkOutId(reservering.bestelling_id, reservering.plaats_id)"><i
+                                            class="fa-sharp fa-solid fa-credit-card text-warning"></i></a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -101,9 +103,7 @@
             </div>
         </div>
     </div>
-
 </template>
-
 <script>
 import axios from 'axios';
 import Loading from 'vue-loading-overlay';
@@ -118,7 +118,6 @@ export default {
             fullPage: true,
             colorLoader: "#009e4c",
             backgroundColorLoader: "#000000",
-
         };
     },
     async created() {
@@ -127,7 +126,6 @@ export default {
         }
         const returenddata = await axios.get("http://localhost:8080/reserveringsysteem/src/components/php/getReserveringen.php?action=read");
         this.reserveringenList = returenddata.data.reserveringen
-
         console.log(this.reserveringenList)
     },
     methods: {
@@ -139,29 +137,22 @@ export default {
         saveId(id,) {
             sessionStorage.setItem('Id', id)
         },
-        checkOutId(ReserveringId,plaatsId) {
+        checkOutId(ReserveringId, plaatsId) {
             sessionStorage.setItem('reserveringId', ReserveringId)
             sessionStorage.setItem('plaatsId', plaatsId)
             this.checkOut()
-            
-            
         },
-        async checkOut(){
+        async checkOut() {
             const returenddata = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getReserveringen.php?action=update", { "id": sessionStorage.getItem('reserveringId'), });
             this.reserveringenList = returenddata.data.bestellingen;
-
             const plekkenData = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getReserveringen.php?action=checkOutPlaats", { "id": sessionStorage.getItem('plaatsId'), });
             this.reserveringenList = plekkenData.data.bestellingen;
-            
             this.isLoading = true;
             window.setTimeout(function () {
                 window.location.reload();
                 this.isLoading = false
             }, 3000);
-
-
         },
-        
     }
 }
 </script>

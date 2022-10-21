@@ -1,13 +1,11 @@
 <template>
-
     <div class="login-block">
-    <h1>Inloggen bij La Rustique</h1>
-    <input type="text" id="user" placeholder="gebruikersnaam" name="user" v-model="gebruikersnaam" />
-    <input type="password" id="pass" placeholder="wachtwoord" name="pass" v-model="wachtwoord" />
-    <button type="submit" v-on:click="Login()">Login</button>
-</div>
+        <h1>Inloggen bij La Rustique</h1>
+        <input type="text" id="user" placeholder="gebruikersnaam" name="user" v-model="gebruikersnaam" />
+        <input type="password" id="pass" placeholder="wachtwoord" name="pass" v-model="wachtwoord" />
+        <button type="submit" v-on:click="Login()">Login</button>
+    </div>
 </template>
-
 <script>
 import axios from 'axios';
 export default {
@@ -16,14 +14,12 @@ export default {
             UsersList: [],
             gebruikersnaam: "",
             wachtwoord: "",
-            role:'',
-            
-            
+            role: '',
         };
     },
-    created(){
-            if(sessionStorage.getItem('role')) location.href = '/home'
-        },
+    created() {
+        if (sessionStorage.getItem('role')) location.href = '/home'
+    },
     methods: {
         async Login() {
             const returenddata = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/login.php", { "username": this.gebruikersnaam, "password": this.wachtwoord, });
@@ -90,7 +86,8 @@ export default {
     background-size: 16px 80px;
 }
 
-.login-block input:active, .login-block input:focus {
+.login-block input:active,
+.login-block input:focus {
     border: 1px solid #45b828;
 }
 
@@ -113,5 +110,4 @@ export default {
 .login-block button:hover {
     background: #33801f;
 }
-
 </style>

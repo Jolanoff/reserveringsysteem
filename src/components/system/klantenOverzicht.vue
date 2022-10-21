@@ -4,28 +4,21 @@
             <div class="row">
                 <div class="col mt-5">
                     <h3 style="color:#2A9D8F; text-align: left;">klanten overzicht</h3>
-
                 </div>
                 <div class="col">
-
                 </div>
                 <div class="col">
-
                 </div>
             </div>
         </div>
-
         <div class="container text-center">
-
             <div class="line mt-3"></div>
             <button type="button" class="btn btn-success mt-2 d-flex" data-bs-toggle="modal"
                 data-bs-target="#klantToevoegen"><i class="fa-solid fa-plus">Voeg Toe</i></button>
             <div class="row">
                 <div class="col">
-
                 </div>
                 <div class="mt-2">
-
                     <table class="table table-dark table-hover">
                         <thead>
                             <tr>
@@ -53,7 +46,6 @@
                                         data-bs-target="#KlantWijzigen">
                                         <i class="fa-regular fa-pen-to-square text-warning"></i></a>
                                 </td>
-
                             </tr>
                         </tbody>
                     </table>
@@ -160,10 +152,8 @@
 <script>
 import axios from 'axios';
 export default {
-
     data: function () {
         return {
-
             klantenList: [],
             role: "",
             addVoornaam: "",
@@ -181,30 +171,28 @@ export default {
             telefoonNum: "",
         };
     },
-
     async created() {
-        if (!sessionStorage.getItem('role')) {
-            location.href = '/'
+        if (!sessionStorage.getItem("role")) {
+            location.href = "/";
         }
         const returenddata = await axios.get("http://localhost:8080/reserveringsysteem/src/components/php/getKlanten.php?action=read");
         this.klantenList = returenddata.data.klanten;
-        console.log(this.klantenList)
-
+        console.log(this.klantenList);
     },
     methods: {
         AddKlant() {
             if (this.addVoornaam || this.addAchternaam || this.addAdres || this.addPostcode || this.addEmail || this.addTelefoonNum) {
-                location.reload()
+                location.reload();
                 const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getKlanten.php?action=create", { "voornaam": this.addVoornaam, "achternaam": this.addAchternaam, "adres": this.addAdres, "postcode": this.addPostcode, "email": this.addEmail, "telefoonNum": this.addTelefoonNum, });
                 this.klantenList = returenddata.data.klanten;
             }
             else {
                 console.log("je moet alles invullen");
-                document.getElementById('Invullen').innerHTML = "U moet alle informatie invullen";
+                document.getElementById("Invullen").innerHTML = "U moet alle informatie invullen";
             }
         },
         saveId(id, voornaam, achternaam, adres, postcode, email, telefoonNum) {
-            sessionStorage.setItem('Id', id)
+            sessionStorage.setItem("Id", id);
             this.voornaam = voornaam;
             this.achternaam = achternaam;
             this.adres = adres;
@@ -213,16 +201,16 @@ export default {
             this.telefoonNum = telefoonNum;
         },
         DelelteKlant() {
-            location.reload()
-            const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getKlanten.php?action=delete", { "id": sessionStorage.getItem('Id') });
+            location.reload();
+            const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getKlanten.php?action=delete", { "id": sessionStorage.getItem("Id") });
             this.klantenList = returenddata.data.klanten;
         },
         EditKlant() {
-            location.reload()
-            const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getKlanten.php?action=update",{ "id": sessionStorage.getItem('Id'),  "voornaam": this.voornaam, "achternaam": this.achternaam, "adres": this.adres, "postcode": this.postcode, "email": this.email, "telefoonNum": this.telefoonNum, });
+            location.reload();
+            const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getKlanten.php?action=update", { "id": sessionStorage.getItem("Id"), "voornaam": this.voornaam, "achternaam": this.achternaam, "adres": this.adres, "postcode": this.postcode, "email": this.email, "telefoonNum": this.telefoonNum, });
             this.klantenList = returenddata.data.klanten;
         },
-    }
+    },
 }
 </script>
 

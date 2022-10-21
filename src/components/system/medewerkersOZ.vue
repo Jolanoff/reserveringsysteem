@@ -4,28 +4,21 @@
             <div class="row">
                 <div class="col mt-5">
                     <h3 style="color:#2A9D8F; text-align: left;">Medewerkers overzicht</h3>
-
                 </div>
                 <div class="col">
-
                 </div>
                 <div class="col">
-
                 </div>
             </div>
         </div>
-
         <div class="container text-center">
-
             <div class="line mt-3"></div>
             <button type="button" class="btn btn-success mt-2 d-flex" data-bs-toggle="modal"
                 data-bs-target="#MedewerkerToevoegen"> <i class="fa-solid fa-plus">Voeg Toe</i></button>
             <div class="row">
                 <div class="col">
-
                 </div>
                 <div class="mt-2">
-
                     <table class="table table-dark table-hover">
                         <thead>
                             <tr>
@@ -56,9 +49,7 @@
                 </div>
             </div>
         </div>
-
         <!-- add new user -->
-
         <div class="modal fade" id="MedewerkerToevoegen" tabindex="-1" aria-labelledby="MedewerkerToevoegenLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -96,7 +87,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Edit user -->
         <div class="modal fade" id="MedewerkerWijzigen" tabindex="-1" aria-labelledby="MedewerkerToevoegenLabel"
             aria-hidden="true" v-for="users in UsersList" v-bind:key="users">
@@ -127,7 +117,6 @@
                 </div>
             </div>
         </div>
-
         <!-- delete user -->
         <div class="modal" id="MedewerkerVerwijderen" tabindex="-1">
             <div class="modal-dialog">
@@ -148,9 +137,7 @@
             </div>
         </div>
     </div>
-
 </template>
-
 <script>
 import axios from 'axios';
 
@@ -181,8 +168,6 @@ export default {
             location.reload()
             const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/process.php?action=delete", { "id": sessionStorage.getItem('Id') });
             this.UsersList = returenddata.data.users;
-
-
         },
         addUser() {
             if (this.AddnickName && this.Addpassword && this.AddRole) {
@@ -194,14 +179,11 @@ export default {
                 console.log("je moet alles invullen");
                 document.getElementById('Invullen').innerHTML = "U moet alle informatie invullen";
             }
-
         },
-
         editUser() {
             location.reload()
             const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/process.php?action=update", { "id": sessionStorage.getItem('Id'), "username": this.username, "password": this.password, });
             this.UsersList = returenddata.data.users;
-
         },
         saveId(id, username, password) {
             sessionStorage.setItem('Id', id)
@@ -212,9 +194,7 @@ export default {
     }
 }
 
-
 </script>
-
 <style>
 .line {
 

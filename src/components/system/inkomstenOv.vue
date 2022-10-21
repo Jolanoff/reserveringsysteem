@@ -8,7 +8,6 @@
                 <div class="col">
                 </div>
                 <div class="col">
-
                 </div>
             </div>
         </div>
@@ -18,10 +17,8 @@
         <div class="line mt-3"></div>
         <div class="row">
             <div class="col">
-
             </div>
             <div class="mt-2">
-
                 <table class="table table-dark table-hover">
                     <thead>
                         <tr>
@@ -37,7 +34,6 @@
                             <td>{{bestelling.klant_id}}</td>
                             <td>€{{bestelling.kosten}}</td>
                             <td>{{bestelling.status}}</td>
-
                         </tr>
                     </tbody>
                 </table>
@@ -62,8 +58,6 @@ export default {
         }
         const returenddata = await axios.get("http://localhost:8080/reserveringsysteem/src/components/php/getReserveringen.php?action=readBestellingen");
         this.reserveringenList = returenddata.data.reserveringen
-        
-
     },
 }
 </script>
