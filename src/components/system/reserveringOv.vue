@@ -55,7 +55,7 @@
                                                             4: {{reservering.kinderen12}}</p>
                                                         <p v-if="reservering.kinderen4 != 0">Aantal kinderen tot 4:
                                                             {{reservering.kinderen12}}</p>
-                                                        <p v-if="reservering.hond == 1">Hond: Ja</p>
+                                                        <p v-if="reservering.hond == 1">Hond : Ja</p>
                                                         <p v-if="reservering.auto == 1">Auto : Ja</p>
                                                         <p v-if="reservering.bezoekers == 1">Bezoekers : Ja</p>
                                                         <p v-if="reservering.douche == 1">Douche : Ja</p>
@@ -129,10 +129,12 @@ export default {
         console.log(this.reserveringenList)
     },
     methods: {
-        deleteReservering() {
+        async deleteReservering() {
             location.reload()
-            const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getReserveringen.php?action=delete", { "id": sessionStorage.getItem('Id') });
+            const returenddata = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getReserveringen.php?action=delete", { "id": sessionStorage.getItem('Id') });
             this.UsersList = returenddata.data.users;
+            const plekkenData = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/getReserveringen.php?action=checkOutPlaats", { "id": sessionStorage.getItem('plaatsId'), });
+            this.reserveringenList = plekkenData.data.bestellingen;
         },
         saveId(id,) {
             sessionStorage.setItem('Id', id)
