@@ -8,7 +8,7 @@
                     </div>
                     <div class="container d-flex flex-wrap mt-2 mb-2 justify-content-center ">
                         <div class="plekkenCard" v-for="plaats in plaatsen" v-bind:key="plaats">
-                            <p class="plekkenText">{{plaats.naam}}</p>
+                            <h2 class="plekkenText">{{plaats.naam}}</h2>
                             <p class="plekkenText">{{plaats.soort}}</p>
                             <p class="plekkenText">prijs: €{{plaats.prijs}}</p>
                         </div>
@@ -43,7 +43,10 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
+
 .plekkenCard {
+    border: 3px solid rgb(0, 59, 10);
     border-radius: 30px;
     background-color: rgb(0, 179, 155);
     width: 20vh;
@@ -53,6 +56,8 @@ export default {
 
 .title {
     color: white;
+    text-transform: uppercase;
+    font-family: 'Kanit', sans-serif;
 }
 
 .plekkenText {

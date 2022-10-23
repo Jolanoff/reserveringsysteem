@@ -5,7 +5,7 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col mt-5">
-                    <h3 style="color:#2A9D8F; text-align: left;">Reserveringen overzicht</h3>
+                    <h3 class="table-text" style="color:#2A9D8F; text-align: left;">Reserveringen overzicht</h3>
                 </div>
                 <div class="col">
                 </div>
@@ -158,5 +158,7 @@ export default {
 </script>
 
 <style>
-
+.table-text{
+    font-weight: 900;
+}
 </style>

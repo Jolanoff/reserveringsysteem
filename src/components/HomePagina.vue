@@ -6,7 +6,7 @@
                 </div>
                 <div class="col">
                     <div class=" mt-5">
-                        <h1>Welkom {{username}}</h1>
+                        <h1 class="welcome">Welkom {{username}}</h1>
                     </div>
                 </div>
                 <div class="col">
@@ -126,5 +126,10 @@ h1 {
     -webkit-animation: shadow-pop-br 0.3s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
     -webkit-animation: shadow-pop-br 0.3s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 
+}
+.welcome{
+    font-family: 'Kanit', sans-serif;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 </style>
