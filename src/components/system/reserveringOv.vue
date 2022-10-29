@@ -27,6 +27,7 @@
                                 <th>Klant</th>
                                 <th>Plaats</th>
                                 <th>Check-in</th>
+                                <th>Check-out</th>
                                 <th>Dagen</th>
                                 <th>Status</th>
                                 <th>Details</th>
@@ -40,6 +41,7 @@
                                 <td>{{reservering.voornaam}}</td>
                                 <td>{{reservering.naam}}</td>
                                 <td>{{reservering.checkin}}</td>
+                                <td>{{reservering.checkout}}</td>
                                 <td>{{reservering.dagen}}</td>
                                 <td>{{reservering.status}}</td>
                                 <td>
