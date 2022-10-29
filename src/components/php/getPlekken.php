@@ -15,7 +15,7 @@ if(isset($_GET['action'])){
 if($action == 'read_bb'){
     $sql = $conn->query("SELECT plaatsen.naam, plaatsen.soort_id, plaatsen.bezit, soort_plaatsen.soort_id ,soort_plaatsen.soort, soort_plaatsen.prijs FROM plaatsen 
     INNER JOIN soort_plaatsen 
-    WHERE plaatsen.soort_id = soort_plaatsen.soort_id AND plaatsen.bezit = 'false'");
+    WHERE plaatsen.soort_id = soort_plaatsen.soort_id ");
     $plaatsen = array();
     while($row = $sql->fetch_assoc()){
         array_push($plaatsen, $row);

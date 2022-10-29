@@ -2,6 +2,7 @@
     <div>
         <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="fullPage" :color="colorLoader"
             :background-color="backgroundColorLoader" />
+        <p id="bezit"></p>
         <h1 class="mt-5 text-center title">Reservering aanmaken</h1>
         <div class="container text-center">
             <div class="row">
@@ -14,16 +15,17 @@
                     <h5 class="mt-3 hlabel">Plek plaats:</h5>
                     <v-select :options="filterdPlaatsen" v-model="selectedPlaats" :change="getSelectedPlekID()">
                     </v-select>
+                    <p id="plekk"></p>
                     <div class="container text-center">
                         <div class="row">
                             <div class="col">
                                 <h5 class="mt-3 hlabel">check in datum:</h5>
-                                <Datepicker v-model="checkin" type="date" range :minDate="checkin" maxRange="4"
+                                <Datepicker v-model="checkin" type="date" range :minDate="checkin"
                                     @update:modelValue="handleDate(checkin)" />
                             </div>
                             <div class="col">
                                 <h5 class="mt-3 hlabel">aantal dagen:</h5>
-                                <vue-number-input v-model="dagen" size="small" :min="1" :max="4" inline controls
+                                <vue-number-input v-model="dagen" size="small" :min="1" :max="10" inline controls
                                     class="">
                                 </vue-number-input>
                             </div>
@@ -32,8 +34,9 @@
                     <h5 class="mt-3 hlabel">aantal personen</h5>
                     <Popper>
                         <button type="button" class="btn btn-success"> <i class="fa-solid fa-person"> :
-                                {{aantaalPersonen
-                                = volwassenen + kinderen12 + kinderen4}} </i></button>
+                                {{ aantaalPersonen
+                                        = volwassenen + kinderen12 + kinderen4
+                                }} </i></button>
                         <template #content>
                             <div class="popper-text">volwassenen:</div>
                             <vue-number-input v-model="volwassenen" size="small" :min="1" :max="6" inline controls
@@ -94,7 +97,7 @@
                 <div class="container text-center">
                     <div class="row">
                         <div class="col">
-                            <h4 class="footer-text">Bestelling : €{{totaalPrijs}}</h4>
+                            <h4 class="footer-text">Bestelling : €{{ totaalPrijs }}</h4>
                         </div>
                         <div class="col">
 
@@ -117,13 +120,13 @@
                     <div class="row">
                         <div class="col" id="Print1">
                             <h4 class="col-tiltle">Bestelling informatie </h4>
-                            <p class="bestelling-info">Achternaam : {{selectedKlant}}</p>
-                            <p class="bestelling-info">Plaats : {{selectedPlaats}}</p>
-                            <p class="bestelling-info">Check in datum : {{startDate}}</p>
-                            <p class="bestelling-info">Volwassenen : {{volwassenen}}</p>
-                            <p class="bestelling-info">Kinderen van 4 tot 12 jaar : {{kinderen12}}</p>
-                            <p class="bestelling-info">Kinderen tot 4 jaar : {{kinderen4}}</p>
-                            <h3 class="bestelling-info fw-bolder">Prijs : {{totaalPrijs}}</h3>
+                            <p class="bestelling-info">Achternaam : {{ selectedKlant }}</p>
+                            <p class="bestelling-info">Plaats : {{ selectedPlaats }}</p>
+                            <p class="bestelling-info">Check in datum : {{ startDate }}</p>
+                            <p class="bestelling-info">Volwassenen : {{ volwassenen }}</p>
+                            <p class="bestelling-info">Kinderen van 4 tot 12 jaar : {{ kinderen12 }}</p>
+                            <p class="bestelling-info">Kinderen tot 4 jaar : {{ kinderen4 }}</p>
+                            <h3 class="bestelling-info fw-bolder">Prijs : {{ totaalPrijs }}</h3>
                         </div>
                         <div class="col" id="Print2">
                             <h4 class="col-tiltle">Extra's </h4>
@@ -234,6 +237,7 @@ export default {
 
             this.calc()
 
+
         }
         ,
         calc() {
@@ -262,35 +266,49 @@ export default {
                 this.totaalPrijs = this.totaalPrijs + 3
             }
         },
-        handleDate(array) {
+        async handleDate(array) {
             this.startDate = new Date(array[0]).toISOString().substring(0, 10);
             this.endDate = new Date(array[1]).toISOString().substring(0, 10);
+
+            if (this.getSelectedPlekID) {
+                const returenddata = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=checkPlek", { "klant_id": this.selectedklantId, "plaats_id": this.selectedPlaatsId, "checkin": this.startDate, "checkout": this.endDate, });
+                this.bestelling = returenddata.data;
+                console.log(this.bestelling.plek)
+                if (this.bestelling.plek == "plek beshickbaar") {
+                    const plek = document.getElementById('plekk').innerHTML = " <span style='color:#2ad421'> plek beschikbaar </span>";
+                    plek.style.color = 'green'
+                }
+                else {
+                    document.getElementById('plekk').innerHTML = " <span style='color:#d42121'>het plek die u gekozen heeft is op deze datum niet beschikbaar</span> ";
+                }
+            }
+
         },
         refresh() {
             location.reload()
         },
-        checkIn() {
-            if (this.selectedKlant && this.selectedPlaats && this.startDate) {
-                const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=create", { "klant_id": this.selectedklantId, "plaats_id": this.selectedPlaatsId, "checkin": this.startDate, "dagen": this.dagen, "volwassenen": this.volwassenen, "kinderen12": this.kinderen12, "kinderen4": this.kinderen4, "hond": this.hond, "elektriciteit": this.elektriciteit, "bezoekers": this.bezoker, "douche": this.douche, "wasmachine": this.wasmachine, "wasdroger": this.wasdroger, "auto": this.auto, "kosten": this.totaalPrijs, });
+        async checkIn() {
+            if (this.selectedKlant && this.selectedPlaats && this.startDate && this.endDate) {
+                const returenddata = await axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=create", { "klant_id": this.selectedklantId, "plaats_id": this.selectedPlaatsId, "checkin": this.startDate, "checkout": this.endDate, "dagen": this.dagen, "volwassenen": this.volwassenen, "kinderen12": this.kinderen12, "kinderen4": this.kinderen4, "hond": this.hond, "elektriciteit": this.elektriciteit, "bezoekers": this.bezoker, "douche": this.douche, "wasmachine": this.wasmachine, "wasdroger": this.wasdroger, "auto": this.auto, "kosten": this.totaalPrijs, });
                 this.bestelling = returenddata.data;
-                this.plekBezitten()
+                console.log(this.bestelling.message)
+                if (this.bestelling.message == "Klant is toegevoegd") {
+                    this.doAjax()
+                }
+                else {
+                    document.getElementById('bezit').innerHTML = "het plek die u gekozen heeft is op deze datum niet beschikbaar";
+                }
+
             }
             else {
                 document.getElementById('vulling').innerHTML = "U moet alle informatie invullen";
             }
 
         },
-
-        plekBezitten() {
-            const returenddata = axios.post("http://localhost:8080/reserveringsysteem/src/components/php/reserveren.php?action=plaatsBezitten", { "id": this.selectedPlaatsId });
-            this.plaatsen = returenddata.data;
-            this.doAjax()
-
-        },
         doAjax() {
             this.isLoading = true;
             window.setTimeout(function () {
-                window.location.reload();
+                location.reload()
                 this.isLoading = false
             }, 3000);
         },
@@ -367,6 +385,10 @@ export default {
 }
 
 #vulling {
+    color: red;
+}
+
+#bezit {
     color: red;
 }
 </style>
